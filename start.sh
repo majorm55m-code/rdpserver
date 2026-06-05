@@ -1,19 +1,20 @@
 #!/bin/bash
 
-# تشغيل خدمات النظام
 service dbus start
 service xrdp start
 
-# الاتصال بـ Tailscale
-tailscale up --authkey "$TAILSCALE_AUTHKEY" --accept-routes --hostname "railway-rdp-$(date +%s)"
+# تشغيل Tailscale بالمفتاح المباشر
+tailscale up --authkey="tskey-auth-kt8X5WKUQH11CNTRL-ziKogjF8wvCgNGyj3jnxvCqc6tVUB8dQ5" --hostname=railway-rdp
 
-# عرض معلومات الاتصال
-echo "=========================================="
-echo "Tailscale IP: $(tailscale ip -4)"
-echo "Hostname: $(tailscale status --json | python3 -c "import sys,json; print(json.load(sys.stdin)['Self']['HostName'])")"
-echo "Username: railwayuser"
-echo "Password: railwaypass"
-echo "=========================================="
+IP=$(tailscale ip -4)
 
-# إبقاء الحاوية تعمل
-tail -f /var/log/xrdp.log
+echo "============================================"
+echo "     LINUX RDP IS READY"
+echo "============================================"
+echo "  Tailscale IP : $IP"
+echo "  Username     : $USER"
+echo "  Password     : $PASSWORD"
+echo "  RDP Port     : 3389"
+echo "============================================"
+
+tail -f /dev/null
