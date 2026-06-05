@@ -7,8 +7,10 @@ ENV TAILSCALE_AUTH_KEY=tskey-auth-kt8X5WKUQH11CNTRL-ziKogjF8wvCgNGyj3jnxvCqc6tVU
 
 RUN apt-get update && apt-get install -y \
     xfce4 xfce4-goodies xrdp dbus-x11 \
-    wget curl net-tools iproute2 \
+    curl net-tools iproute2 \
     && apt-get clean
+
+RUN curl -fsSL https://tailscale.com/install.sh | sh
 
 RUN useradd -m -s /bin/bash $USER && \
     echo "$USER:$PASSWORD" | chpasswd && \
@@ -17,14 +19,9 @@ RUN useradd -m -s /bin/bash $USER && \
     chown $USER:$USER /home/$USER/.xsession
 
 RUN sed -i 's/#Port=3389/Port=3389/' /etc/xrdp/xrdp.ini && \
-    sed -i 's/max_bpp=32/max_bpp=24/' /etc/xrdp/xrdp.ini && \
-    sed -i 's/xserverbpp=24/xserverbpp=24/' /etc/xrdp/xrdp.ini
-
-RUN curl -fsSL https://tailscale.com/install.sh | sh
+    sed -i 's/max_bpp=32/max_bpp=24/' /etc/xrdp/xrdp.ini
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
-
-EXPOSE 3389
 
 CMD ["/start.sh"]
